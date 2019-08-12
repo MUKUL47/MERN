@@ -34,7 +34,7 @@ class LoginRegister extends Component {
         fetch("/getLastLogged")
         .then(msg => msg.json())
         .then(m => {
-            if( m ){
+            if( m && this.state.login.LoginErr != "Session expired"){
                 let user = JSON.parse(m.user)
                 if( Math.abs(Math.floor(user.till - Date.now())/1000) < 3600 || user.till == Infinity ){
                     this.setState({
@@ -76,7 +76,7 @@ class LoginRegister extends Component {
                         })                 
                     }else{
                         this.props.history.push({
-                        pathname:"/Home",
+                        pathname:"/",
                         state:{
                             message: JSON.stringify(data.Success)
                          }

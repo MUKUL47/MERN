@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import {LoginRegister} from './Components/Home/home'
 import {FrontPage} from './Components/FrontPage/frontPage'
-import {VerifyAccount} from './Components/Home/hiddenComponent'
+import {ShowPost} from './Components/showPost/showPost'
+import {CreatePost} from './Components/createPost/createPost'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
@@ -10,9 +11,10 @@ class App extends Component {
   render() {
     return (
     <Router>
-     <Route exact path="/" component={LoginRegister} /> 
-     <Route exact path="/home" component={FrontPage} /> 
-     <Route exact path="/register" component={LoginRegister} /> 
+     <Route exact path="/loginOrRegister" component={LoginRegister} /> 
+     <Route exact path="/" component={FrontPage} />
+     <Route exact path="/create" component={FrontPage} />
+     <Route exact path="/post/:id" component={ShowPost}/>  
     </Router>
     );
   }

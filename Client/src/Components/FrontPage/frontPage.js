@@ -1,80 +1,78 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import {Navbar} from './childrenComponents/navbar'
-import {Create} from './childrenComponents/createPost'
-import {Posts} from './childrenComponents/posts'
+import {Navbar} from '../navbar/navbar'
+import {Posts} from './childrenComponents/posts/posts'
+import {Create} from '../createPost/childrenComponents/createPost'
+
 class FrontPage extends Component {
     constructor(props){
-        super(props)        
+        super(props)  
+        console.log(props)  
         this.state = { 
-          bars : ['','Profile','Create','Friends','Requests'],
-          navcounter : -1,
-          id : ""
+          username : "",
+          id : "",
+          sessionValidity : 0
         }
     }
 
-
+    redirectLogin(msg){
+      this.props.history.push({
+        pathname:"/",
+          state: { msg : msg }
+      })
+    }
 
     componentWillMount(){  
       fetch("/getLastLogged")
         .then(msg => msg.json())
         .then(m => {          
           let user = JSON.parse(m.user)
-            if( !user.user || user.till != Infinity && Math.abs(Math.floor(user.till - Date.now())/1000) > 3600 ){  
-                this.props.history.push({
-                  pathname:"/",
-                    state: { msg : "Login first" }
-                })
+            if( !user.user || user.till != Infinity && 
+              Math.abs(Math.floor(user.till - Date.now())/1000) > 3600 ){  
+                this.redirectLogin()                
             }else{
-              console.log(user)
               this.setState({
-                bars : [user.user.substring(0,user.user.indexOf('@')),
-                'Profile','Create','Friends','Requests'],
+                username : user.user.substring(0,user.user.indexOf('@')),
                 id : user.id,
-                navcounter : 0
+                sessionValidity : user.till
               })
-              console.log(this.state)
             }
         })
         .catch (e => this.props.history.push({
-          pathname:"/",
+          pathname:"/loginOrRegister",
             state: { msg : "Some error has occured please try again some time" }
         })
           )
     }
-
-    logout = ()=>{
-      fetch("/logout")
-      .then(msg => msg.json())
-      .then(m => this.props.history.push({pathname:"/",
-        state: { msg : m.Success }
-      }))                             
-    }
-
-    setNavCounter = (c)=>{ this.setState({ navcounter : c })  }
-    
     render(){
-      let currentDiv;    
-      switch(this.state.navcounter){
-        case 0: currentDiv = <Posts
-        id = {this.state.id}/>
-          break;
-        case 2: currentDiv = <Create
+      let dynamicdiv = [
+      <Posts
+      id = {this.state.id}
+      />,
+      <Create
         id = {this.state.id}
-        redirect = {this.setNavCounter}
-        />
-          break;
+        properties = {this.props}
+        />],
+        cDiv;
+
+      switch(this.props.history.location.pathname){
+        case '/' : 
+        cDiv = dynamicdiv[0]      
+          break
+        case '/create' :
+            cDiv = dynamicdiv[1]  
+          break
       }
+      console.log(dynamicdiv)
       return ( 
         <Router>          
-        <div>
-          <Navbar 
-          children = {this.state.bars}
-          logout = {this.logout} 
-          setCounter = {this.setNavCounter}                   
+        <div>         
+        <Navbar
+          username = {this.state.username}
+          properties = {this.props}
           />
-          {currentDiv}
-        </div>
+          {cDiv}
+        </div>                
         </Router>
         )
 }}
