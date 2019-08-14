@@ -2,9 +2,10 @@ let style = {
     navbar : {
         marginLeft : '2.5%',
         width : '95%',
-        fontSize : '200%',
+        fontSize : '150%',
         marginTop : '1.25%',
-        fontFamily : 'Quicksand'       
+        fontFamily : 'Quicksand',
+        height : '7.2%'       
     },
     navChild : {
         marginLeft : '2.5%',
@@ -37,7 +38,7 @@ let style = {
         fontSize : '180%'
     },
     keywords : {
-        width : '8%',
+        width : '6%',
         marginRight : '12.5%'
     },
     search : {

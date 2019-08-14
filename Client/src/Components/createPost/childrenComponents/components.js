@@ -4,20 +4,23 @@ function Status(props){
     return(        
         <div >               
             <input type="checkbox" className="frequency" 
-            checked = {props.status[0]}
-            onChange = {() => props.changeStatus(0)}
-            
+            checked = {(props.status == 0 ? true : false)}
+            onChange = {() => props.changeStatus(0)}            
             />
+
             <b><h2><label>Private (visible to you and your friends)</label></h2></b>
             <br/>
+
             <input type="checkbox" className="frequency" 
-            checked = {props.status[1]}            
+            checked = {(props.status == 1 ? true : false)}        
             onChange = {() => props.changeStatus(1)}
             />
+
             <b><h2><label>Only Me (visible to you)</label></h2></b>
             <br/>
+            
             <input type="checkbox" className="frequency" 
-            checked = {props.status[2]}        
+            checked = {(props.status == 2 ? true : false)}
             onChange = {() => props.changeStatus(2) }
             />
             <b><h2><label>Public (visible to everyone)</label></h2></b>        
@@ -26,6 +29,12 @@ function Status(props){
 }
 
 function AddKeyWords(props){
+    let btn;
+    if( props.currentKeyword.trim().length > 0 ) {
+        btn = <button className = "ui black label"
+        onClick = {() => props.addKeywords(props.currentKeyword.toLowerCase())} 
+        >ADD</button>
+    }
     return(
         <div>
         <div style = {style.keywords}>
@@ -35,15 +44,13 @@ function AddKeyWords(props){
             onChange = {props.changeKeyword}
             value = {props.currentKeyword}          
             />
-            <button className = "ui black label"
-            onClick = {() => props.addKeywords(props.currentKeyword.toLowerCase())} 
-            >ADD</button> 
+            {btn}
         </div>                          
         </div>
             {props.keywords.map( (v,i) =>
             <button className = "ui black label"
             onClick = {() => props.removeKeyword(i)}
-            key = {Math.random()*i}
+            key = {Math.random()}
             >
             <h3>#{v}</h3>
             </button>

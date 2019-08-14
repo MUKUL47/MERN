@@ -5,7 +5,7 @@ function Create(props){
     const [fields, updateFields] = useState({
         title : "",
         content : "",
-        status : [true, false,false],
+        status : 1,
         keywords : new Set(),
         inactiveKeyword : ""
     })
@@ -21,7 +21,7 @@ function Create(props){
                 content : fields.content,
                 id : props.id,
                 keywords : Array.from(fields.keywords),
-                status : ""
+                status : JSON.stringify(fields.status)
             })
             })
             .then(response => response.json())
@@ -51,12 +51,10 @@ function Create(props){
     }
 
     let status = (pos)=>{
-        let newStatuses = [false,false,false]
-        newStatuses[pos] = true
         updateFields({
             content : fields.content,
             title : fields.title,
-            status : newStatuses,
+            status : pos,
             keywords : fields.keywords,
             inactiveKeyword : fields.inactiveKeyword
         })                
