@@ -15,10 +15,32 @@ class ShowPost extends Component {
             url : props.match.url,
             username : Cookies.get("user"),
             sessionValidity : Cookies.get("till"),
-            id : (Cookies.get("id") ? Cookies.get("id").substring(1) : "")
+            id : (Cookies.get("id") ? Cookies.get("id").substring(1) : ""),
+            isAnonymous : false
         }
     }
+    
+    getPost(){
+        fetch(this.state.url)
+            .then(msg => msg.json())
+            .then(m => {
+                if( m ){
+                    if( m.post[0].status != 2 && !this.state.username  ){
+                        this.props.history.push({pathname:"/loginOrRegister",
+                        state: { msg : "This post is private, login to continue" }})
+                    }
+                    else{
+                        this.setState({
+                            post : JSON.stringify(m.post[0]),
+                            isAnonymous : this.state.username === undefined                           
+                        })
+                    }
+                }
+            })
+    }
+
     componentWillMount(){
+        /*
         if( !this.state.username || 
             this.state.sessionValidity != Infinity && 
             Math.abs
@@ -29,17 +51,10 @@ class ShowPost extends Component {
               state: { msg : "Login first" }
             })                          
           }else{
-            fetch(this.state.url)
-            .then(msg => msg.json())
-            .then(m => {
-                if( m ){
-                    this.setState({
-                        post : JSON.stringify(m.post[0])
-                    })
-                }
-            })
+              this.getPost()            
           }
-        
+          */
+         this.getPost()         
     }
     
     
@@ -49,7 +64,10 @@ class ShowPost extends Component {
             console.log(this.state)
             sP = < ComponentController 
             post = {this.state.post}
-            id = {this.state.id}            
+            id = {this.state.id} 
+            properties = {this.props} 
+            username = {this.state.username}
+            isAnonymous = {this.state.isAnonymous}      
             />
         }
 
@@ -57,7 +75,8 @@ class ShowPost extends Component {
        <Router>
             <Navbar
             username = {this.state.username}
-            properties = {this.props}          
+            properties = {this.props} 
+            isAnonymous = {this.state.isAnonymous}               
             />
             {sP}
        </Router>

@@ -3,18 +3,20 @@ import './style.css'
 function TitleContentKeywords(prop){
     var props = prop.p
     let addKeywords = 
+            (!props.isAnonymous ? 
             <div className = "ui input" id="kW" >
             <input type="text" 
             placeholder="Add keywords"
             value = {props.currentKeyword} 
             onChange = {props.changeKeyword}            
             />
-            {props.currentKeyword.trim().length > 0 ?
+            {props.currentKeyword.trim().length > 0
+            ?
             <button class="ui secondary button"
             onClick = {props.addKeyword}
             >Add</button>
             : null}            
-            </div>,
+            </div> : null),
             
     keywords = 
             <div id= "delete">
@@ -53,8 +55,9 @@ function LikeDeleteStatus(prop){
         <div className="ui labeled button">
         <div className="ui red button"
         onClick = { () => props.likePost() }
-        >
-            Like
+        >{props.likes.indexOf(props.userId) > -1 
+            ? "Unlike"
+            : "Like"}
         </div>
         <a className="ui basic red left pointing label">
             {props.likes.length}
@@ -68,7 +71,7 @@ function LikeDeleteStatus(prop){
     >Delete Post</button>,
 
     changeStatus = 
-    <div id="status">
+        <div id="status">
         <button class="massive ui button"
         onDoubleClickCapture = {() => props.changeStatus(0)}
         >
@@ -85,6 +88,10 @@ function LikeDeleteStatus(prop){
         {(props.status == 2 ? <u>Public</u> : "Public" )}
         </button>
     </div>
+
+    if(props.isAnonymous){
+        like = deletePost = changeStatus = null
+    }
 
     return(
         <div>
@@ -123,12 +130,19 @@ function CommentSection(prop){
     let comments = 
     <div>
         {props.comments.map( v => 
+        <div key = {Math.random()}>
         <div>
-        <h2 key = {Math.random()}>{v}</h2> 
-        <div class="ui inverted divider"></div>
+            <h2 ><b>{v.user}</b>)  {v.comment}</h2>            
+        </div>
+        <div class="ui inverted divider"
+        ></div>
         </div>               
         )}
     </div>
+
+    if(props.isAnonymous){
+        commentInput = null
+    }
 
     return (
         <div>
