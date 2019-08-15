@@ -12,7 +12,11 @@ const exp = require('express'),
     routes.use(bp.json())    
     routes.get("/all",(req,res)=>{db.find({}).then(msg => res.send(JSON.stringify(msg)))})
     routes.get("/del",(req,res)=>{db.remove({}).then(msg => res.send(JSON.stringify(msg)))})
-    routes.use(require('./Routes/LoginRegister/controller.js')) 
-    routes.use(require('./Routes/Posts/controller.js')) 
+
+    routes.use(require('./Routes/LoginRegister/controller')) 
+    routes.use(require('./Routes/Posts/controller')) 
+    routes.use(require('./Routes/ManipulatePost/controller'))
+    routes.use(require('./Routes/Social/controller'))
+
     routes.listen(2999)
 
